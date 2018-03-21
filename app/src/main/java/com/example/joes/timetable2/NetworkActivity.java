@@ -39,10 +39,6 @@ public class NetworkActivity {
         CreateFolder();
     }
 
-    public static void GetNetworkData(String Intake) {
-        new GetTimeTableInfo().execute(Intake);
-    }
-
     public static class GetTimeTableList extends AsyncTask<Void, Void, Void> {
 
         File TempFile = new File(ROOT_TEMP_PATH, "TimeTableListTemporary.xml");
@@ -141,10 +137,9 @@ public class NetworkActivity {
                 e.printStackTrace();
             }
 
-
             Intent MainActivityIntent = new Intent(appContext, MainActivity.class);
             appContext.startActivity(MainActivityIntent);
-            SplashScreenActivity.LoadingScreenLinearLayout.setVisibility(View.GONE);
+
         }
     }
 

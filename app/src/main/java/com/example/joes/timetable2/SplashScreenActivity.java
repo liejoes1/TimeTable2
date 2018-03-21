@@ -2,6 +2,9 @@ package com.example.joes.timetable2;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -33,8 +36,16 @@ public class SplashScreenActivity extends AppCompatActivity {
         // If Data is not exist - Initial Startup Only
         SplashScreenLinearLayout.setVisibility(View.VISIBLE);
 
-        //DownloadEverything();
-        TempVal();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (sharedPreferences.getString(getString(R.string.pref_timetable_key), getString(R.string.pref_timetable_default)).equals("null")) {
+            //Means that it is not yet defined, first startup
+            DownloadEverything();
+        } else {
+            //If already defined earlier, just redownload and parse the data
+            new NetworkActivity.GetTimeTableInfo().execute(sharedPreferences.getString(getString(R.string.pref_timetable_key), getString(R.string.pref_timetable_default)));
+
+        }
+
 
 
     }
@@ -71,10 +82,14 @@ public class SplashScreenActivity extends AppCompatActivity {
         SplashScreenLinearLayout.setVisibility(View.GONE);
         IntakeScreenLinearLayout.setVisibility(View.VISIBLE);
 
+        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         TimeTableSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 HideKeyboard();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(getString(R.string.pref_timetable_key), TimeTableListAutoCompleteTextView.getText().toString());
+                editor.apply();
                 IntakeScreenLinearLayout.setVisibility(View.GONE);
                 LoadingScreenLinearLayout.setVisibility(View.VISIBLE);
                 new NetworkActivity.GetTimeTableInfo().execute(TimeTableListAutoCompleteTextView.getText().toString());

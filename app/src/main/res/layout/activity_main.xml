@@ -9,14 +9,7 @@
     tools:context="com.example.joes.timetable2.MainActivity">
 
 
-    <Button
-        android:id="@+id/tempButton"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:text="Refresh"
-        >
 
-    </Button>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_timetable"
         android:layout_width="match_parent"

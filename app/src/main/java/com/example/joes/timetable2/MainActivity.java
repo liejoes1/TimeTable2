@@ -18,23 +18,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     public RecyclerView TimeTableRecyclerView;
     public TimeTableAdapter mAdapter;
-    public String CURRENT_INTAKE_PREF = "";
-    public Button tempButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         init();
-
-
-        tempButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setupSharedPreference();
-                NetworkActivity.GetNetworkData(CURRENT_INTAKE_PREF);
-            }
-        });
 
         mAdapter = new TimeTableAdapter(this, Utils.ListOfTimeTable);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -45,8 +34,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
     private void setupSharedPreference() {
+        Intent SplashScreenIntent = new Intent(this, SplashScreenActivity.class);
+        startActivity(SplashScreenIntent);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        CURRENT_INTAKE_PREF = sharedPreferences.getString(getString(R.string.pref_timetable_key), getString(R.string.pref_timetable_default));
+        new NetworkActivity.GetTimeTableInfo().execute(sharedPreferences.getString(getString(R.string.pref_timetable_key), getString(R.string.pref_timetable_default)));
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
@@ -54,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private void init() {
         TimeTableRecyclerView = (RecyclerView) findViewById(R.id.rv_timetable);
-        tempButton = (Button) findViewById(R.id.tempButton);
     }
 
 
@@ -64,8 +54,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         if (IDGathered == R.id.action_settings) {
             Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
             startActivity(startSettingsActivity);
-
             return true;
+        } else if (IDGathered == R.id.action_refresh) {
+            setupSharedPreference();
         }
 
 
@@ -74,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main, menu);
         return true;
@@ -84,8 +74,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         if (s.equals(getString(R.string.pref_timetable_key))) {
-
-
+            setupSharedPreference();
         }
     }
 
