@@ -33,12 +33,18 @@ public class SplashScreenActivity extends AppCompatActivity {
         // If Data is not exist - Initial Startup Only
         SplashScreenLinearLayout.setVisibility(View.VISIBLE);
 
-        DownloadEverything();
-
+        //DownloadEverything();
+        TempVal();
 
 
     }
 
+
+    private void TempVal() {
+        Utils.ListOfTimeTable.add(new TimeTable("21 Sept", "2018-03-19 13:45:00 +0800", "2018-03-19 15:45:00 +0800", "B - 7 -1", "CS"));
+        Intent MainActivityIntent = new Intent(context, MainActivity.class);
+        context.startActivity(MainActivityIntent);
+    }
     private void initVar() {
         SplashScreenLinearLayout = (LinearLayout) findViewById(R.id.ll_splash_screen);
         IntakeScreenLinearLayout = (LinearLayout) findViewById(R.id.ll_intake_screen);

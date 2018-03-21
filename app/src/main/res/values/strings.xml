@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">TimeTable2</string>
+    <string name="pref_timetable_label">Intake Code</string>
+    <string name="pref_timetable_key" translatable="false">intakecode</string>
+    <string name="pref_timetable_default" translatable="false">0x</string>
 </resources>
