@@ -38,4 +38,33 @@ public class DataParsing {
     public static ArrayAdapter<String> getIntakeList(Context context) {
         return new ArrayAdapter<>(context, android.R.layout.simple_dropdown_item_1line, Utils.ListOfAllIntake);
     }
+
+    public static void ParseTimeTable(FileInputStream xmlFileName) {
+        try {
+            XmlToJson xmlToJson = new XmlToJson.Builder(xmlFileName, null).build();
+            JSONObject RootObject = new JSONObject(xmlToJson.toString());
+            JSONObject WeekObject = RootObject.getJSONObject("week");
+            JSONArray DayArray = WeekObject.getJSONArray("day");
+            Log.i("LOG", "Parse Timetable: " + DayArray);
+
+            for (int DayIndex = 0; DayIndex < DayArray.length(); DayIndex++) {
+                JSONObject DailyObject = DayArray.getJSONObject(DayIndex);
+                JSONArray ClassArray = DailyObject.getJSONArray("class");
+                for (int DailyArrayIndex = 0; DailyArrayIndex < ClassArray.length(); DailyArrayIndex++) {
+                    JSONObject SubjectObject = ClassArray.getJSONObject(DailyArrayIndex);
+                    String Module = SubjectObject.getString("subject");
+                    String Classroom = SubjectObject.getString("location");
+                    String StartTime = SubjectObject.getString("start");
+                    String EndTime = SubjectObject.getString("end");
+                    String Date = StartTime.substring(0, 10);
+
+                    Utils.ListOfTimeTable.add(new TimeTable(Date, StartTime, EndTime, Classroom, Module));
+                }
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }

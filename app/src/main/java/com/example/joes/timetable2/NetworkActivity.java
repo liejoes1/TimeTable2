@@ -1,14 +1,20 @@
 package com.example.joes.timetable2;
 
+import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
+import android.view.View;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -27,8 +33,6 @@ public class NetworkActivity {
     private static final String TIMETABLE_LIST_URL = "https://webspace.apiit.edu.my/intake-timetable/TimetableIntakeList/TimetableIntakeList.xml";
     private static String TIMETABLE_INFO_BASE = "https://webspace.apiit.edu.my/intake-timetable/replyLink.php?stid=";
 
-
-    public static File TimeTableListFile;
 
     public static void setContext(Context context) {
         appContext = context;
@@ -60,18 +64,85 @@ public class NetworkActivity {
             //After creating file copy the content now.
             CopyData(NewFile, TempFile);
             //When Done Pass the file to be processed
-            setTimeTableListLocation(NewFile);
             try {
-                DataParsing.ParseTimeTableList(new FileInputStream(NetworkActivity.TimeTableListFile));
+                DataParsing.ParseTimeTableList(new FileInputStream(NewFile));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public static void setTimeTableListLocation(File file) {
-        TimeTableListFile = file;
+    public static class GetTimeTableInfo extends AsyncTask<String, Void, String> {
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+            StringBuilder fullString = new StringBuilder();
+            try {
+                URL url = new URL(TIMETABLE_INFO_BASE + strings[0]);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+                String str;
+
+                while ((str = bufferedReader.readLine()) != null) {
+                    fullString.append(str);
+                }
+                bufferedReader.close();
+                Log.i("LOG", "Timetable Info: " + fullString);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return fullString.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (!s.equals("Time table for the current week is not available for this intake code.")) {
+                new GetTimeTableData().execute(s);
+            }
+        }
+
     }
+
+    public static class GetTimeTableData extends AsyncTask<String, Void, Void> {
+
+        File TempFile = new File(ROOT_TEMP_PATH, "TimeTableTemporary.zip");
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            try {
+                URL url = new URL(strings[0]);
+                DownloadFile(url, TempFile);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            new Decompress(TempFile.toString(), ROOT_TEMP_PATH + "/TimeTableTemporary/").unzip();
+
+            File NewFile = new File(ROOT_DIRECTORY_PATH, "TimeTable.xml");
+            CopyData(NewFile, new File(ROOT_TEMP_PATH + "/TimeTableTemporary/" + "timetable.xml"));
+
+            //Parse the data
+            try {
+                DataParsing.ParseTimeTable(new FileInputStream(NewFile));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
+            Intent MainActivityIntent = new Intent(appContext, MainActivity.class);
+            appContext.startActivity(MainActivityIntent);
+            SplashScreenActivity.LoadingScreenLinearLayout.setVisibility(View.GONE);
+        }
+    }
+
 
     private static void CreateFolder() {
         ROOT_DIRECTORY_PATH = Utils.getRootDirPath(appContext);
@@ -82,11 +153,10 @@ public class NetworkActivity {
         ROOT_TEMP_PATH = TempDir.toString();
     }
 
-    private static void DownloadFile(URL url,File TempFile) {
-        HttpURLConnection httpURLConnection = getNetworkData(url);
-        FileOutputStream fileOutputStream = null;
+    private static void DownloadFile(URL url, File TempFile) {
         try {
-            fileOutputStream = new FileOutputStream(TempFile);
+            HttpURLConnection httpURLConnection = getNetworkData(url);
+            FileOutputStream fileOutputStream = new FileOutputStream(TempFile);
             InputStream inputStream = httpURLConnection.getInputStream();
             int lengthOfFile = httpURLConnection.getContentLength();
 

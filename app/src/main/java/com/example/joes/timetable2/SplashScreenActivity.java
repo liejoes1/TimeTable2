@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -18,6 +19,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     public static LinearLayout SplashScreenLinearLayout, IntakeScreenLinearLayout, LoadingScreenLinearLayout;
     public static Context context;
     public static AutoCompleteTextView TimeTableListAutoCompleteTextView;
+    public static Button TimeTableSubmitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         DownloadEverything();
 
+
+
     }
 
     private void initVar() {
@@ -40,10 +44,11 @@ public class SplashScreenActivity extends AppCompatActivity {
         IntakeScreenLinearLayout = (LinearLayout) findViewById(R.id.ll_intake_screen);
         LoadingScreenLinearLayout = (LinearLayout) findViewById(R.id.ll_loading_screen);
 
+        TimeTableSubmitButton = (Button) findViewById(R.id.bt_timetable_submit);
         TimeTableListAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.actv_timetable_list);
     }
 
-    private static void DownloadEverything() {
+    private void DownloadEverything() {
         //This method will download all the files needed
         //It only used for Initial Welcome Screen
         //Or user force refresh ir
@@ -60,8 +65,24 @@ public class SplashScreenActivity extends AppCompatActivity {
         SplashScreenLinearLayout.setVisibility(View.GONE);
         IntakeScreenLinearLayout.setVisibility(View.VISIBLE);
 
+        TimeTableSubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HideKeyboard();
+                IntakeScreenLinearLayout.setVisibility(View.GONE);
+                LoadingScreenLinearLayout.setVisibility(View.VISIBLE);
+                new NetworkActivity.GetTimeTableInfo().execute(TimeTableListAutoCompleteTextView.getText().toString());
 
+            }
+        });
+    }
 
+    private void HideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
 }
