@@ -133,6 +133,7 @@ public class NetworkActivity {
             File NewFile = new File(ROOT_DIRECTORY_PATH, "TimeTable.xml");
             CopyData(NewFile, new File(ROOT_TEMP_PATH + "/TimeTableTemporary/" + "timetable.xml"));
 
+            Utils.ListOfTimeTable.clear();
             //Parse the data
             try {
                 DataParsing.ParseTimeTable(new FileInputStream(NewFile));

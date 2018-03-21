@@ -11,19 +11,31 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     public RecyclerView TimeTableRecyclerView;
     public TimeTableAdapter mAdapter;
     public String CURRENT_INTAKE_PREF = "";
+    public Button tempButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setupSharedPreference();
+
         init();
-        NetworkActivity.GetNetworkData(CURRENT_INTAKE_PREF);
+
+
+        tempButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setupSharedPreference();
+                NetworkActivity.GetNetworkData(CURRENT_INTAKE_PREF);
+            }
+        });
+
         mAdapter = new TimeTableAdapter(this, Utils.ListOfTimeTable);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         TimeTableRecyclerView.setLayoutManager(mLayoutManager);
@@ -42,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private void init() {
         TimeTableRecyclerView = (RecyclerView) findViewById(R.id.rv_timetable);
+        tempButton = (Button) findViewById(R.id.tempButton);
     }
 
 
