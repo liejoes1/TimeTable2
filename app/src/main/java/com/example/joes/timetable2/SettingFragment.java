@@ -1,5 +1,6 @@
 package com.example.joes.timetable2;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
@@ -9,6 +10,9 @@ import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 
@@ -36,6 +40,8 @@ public class SettingFragment extends PreferenceFragmentCompat implements
             }
         }
 
+
+
         Preference preference = findPreference(getString(R.string.pref_timetable_key));
         preference.setOnPreferenceChangeListener(this);
     }
@@ -58,11 +64,39 @@ public class SettingFragment extends PreferenceFragmentCompat implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+
         Preference preference = findPreference(s);
         if (null != preference) {
             if (!(preference instanceof CheckBoxPreference)) {
-                String value = sharedPreferences.getString(preference.getKey(), "");
+                EditTextPreference editTextPreference = (EditTextPreference) getPreferenceScreen().findPreference(getString(R.string.pref_timetable_key));
+                final String value = sharedPreferences.getString(preference.getKey(), "");
+
+                editTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        for (int i = 0; i < Utils.ListOfAllIntake.size(); i++) {
+                            System.out.println("List Of All intake" + newValue);
+                            if (newValue.equals(Utils.ListOfAllIntake.get(i).toString())) {
+                                Toast.makeText(getContext(), "Intake is OK", Toast.LENGTH_SHORT).show();
+
+                                return true;
+                            }
+                        }
+                        Toast.makeText(getContext(), "Intake is BAD", Toast.LENGTH_SHORT).show();
+                        return false;
+
+
+
+
+                    }
+                });
+
+
                 setPreferenceSummary(preference, value);
+
+
+
+
             }
         }
     }
@@ -84,6 +118,7 @@ public class SettingFragment extends PreferenceFragmentCompat implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+
     }
 
     @Override
@@ -91,4 +126,6 @@ public class SettingFragment extends PreferenceFragmentCompat implements
         super.onDestroy();
         getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
+
+
 }
