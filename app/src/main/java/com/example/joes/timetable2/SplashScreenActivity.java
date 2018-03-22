@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -42,7 +44,13 @@ public class SplashScreenActivity extends AppCompatActivity {
             DownloadEverything();
         } else {
             //If already defined earlier, just redownload and parse the data
-            new NetworkActivity.GetTimeTableInfo().execute(sharedPreferences.getString(getString(R.string.pref_timetable_key), getString(R.string.pref_timetable_default)));
+            try {
+                DataParsing.ParseTimeTableList(new FileInputStream(new File(NetworkActivity.ROOT_DIRECTORY_PATH, "TimeTableList.xml")));
+                new NetworkActivity.GetTimeTableInfo().execute(sharedPreferences.getString(getString(R.string.pref_timetable_key), getString(R.string.pref_timetable_default)));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
 
         }
 

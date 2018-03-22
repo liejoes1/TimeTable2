@@ -27,7 +27,7 @@ import java.net.URL;
 public class NetworkActivity {
 
     private static Context appContext;
-    private static String ROOT_DIRECTORY_PATH;
+    public static String ROOT_DIRECTORY_PATH;
     private static String ROOT_TEMP_PATH;
 
     private static final String TIMETABLE_LIST_URL = "https://webspace.apiit.edu.my/intake-timetable/TimetableIntakeList/TimetableIntakeList.xml";
