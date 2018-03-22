@@ -3,6 +3,7 @@
 
     <EditTextPreference
         android:theme="@style/PreferenceThemeOverlay"
+        android:textAllCaps="true"
         android:defaultValue="@string/pref_timetable_default"
         android:key="@string/pref_timetable_key"
         android:title="@string/pref_timetable_label" />

@@ -7,6 +7,7 @@ import android.os.CountDownTimer;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -113,14 +114,20 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 HideKeyboard();
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString(getString(R.string.pref_timetable_key), TimeTableListAutoCompleteTextView.getText().toString());
-                editor.apply();
-                IntakeScreenLinearLayout.setVisibility(View.GONE);
-                LoadingScreenLinearLayout.setVisibility(View.VISIBLE);
-                new NetworkActivity.GetTimeTableInfo().execute(TimeTableListAutoCompleteTextView.getText().toString());
+                for (int TotalIntake = 0; TotalIntake < Utils.ListOfAllIntake.size(); TotalIntake++) {
+                    if (TimeTableListAutoCompleteTextView.getText().toString().toUpperCase().equals(Utils.ListOfAllIntake.get(TotalIntake))) {
 
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString(getString(R.string.pref_timetable_key), TimeTableListAutoCompleteTextView.getText().toString());
+                        editor.apply();
+                        IntakeScreenLinearLayout.setVisibility(View.GONE);
+                        LoadingScreenLinearLayout.setVisibility(View.VISIBLE);
+                        new NetworkActivity.GetTimeTableInfo().execute(TimeTableListAutoCompleteTextView.getText().toString());
+                    }
+                }
+                Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content),"Intake is invalid, Please try again.",Snackbar.LENGTH_SHORT).show();
             }
+
         });
     }
 

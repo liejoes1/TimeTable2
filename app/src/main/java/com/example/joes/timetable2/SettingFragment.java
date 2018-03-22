@@ -37,7 +37,7 @@ public class SettingFragment extends PreferenceFragmentCompat implements
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.pref_setting);
 
-        SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
+        final SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
         PreferenceScreen preferenceScreen = getPreferenceScreen();
         context = getActivity();
 
@@ -63,7 +63,7 @@ public class SettingFragment extends PreferenceFragmentCompat implements
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 for (int i = 0; i < Utils.ListOfAllIntake.size(); i++) {
-                    newValue = newValue.toString().toUpperCase();
+
                     System.out.println("List Of All intake INITIAL" + newValue);
                     if (newValue.equals(Utils.ListOfAllIntake.get(i).toString())) {
                         setPreferenceSummary(preference, newValue.toString());
@@ -99,7 +99,7 @@ public class SettingFragment extends PreferenceFragmentCompat implements
 
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+    public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, String s) {
 
         Preference preference = findPreference(s);
         if (null != preference) {
@@ -114,7 +114,6 @@ public class SettingFragment extends PreferenceFragmentCompat implements
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 for (int i = 0; i < Utils.ListOfAllIntake.size(); i++) {
-                    newValue = newValue.toString().toUpperCase();
                     System.out.println("List Of All intake INITIAL" + newValue);
                     if (newValue.equals(Utils.ListOfAllIntake.get(i).toString())) {
                         setPreferenceSummary(preference, newValue.toString());

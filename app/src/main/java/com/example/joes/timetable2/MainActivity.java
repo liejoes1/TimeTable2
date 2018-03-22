@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
         Log.i("LOG", "change intake: " + INTAKE_CHANGED);
         if (INTAKE_CHANGED) {
-            showSnackbar(getWindow().getDecorView().findViewById(android.R.id.content),"Intake changed successfully",Snackbar.LENGTH_INDEFINITE);
+            showSnackbar(getWindow().getDecorView().findViewById(android.R.id.content),"Intake changed successfully",Snackbar.LENGTH_LONG);
             INTAKE_CHANGED = false;
         }
 
