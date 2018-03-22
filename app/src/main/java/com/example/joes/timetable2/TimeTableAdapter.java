@@ -40,13 +40,6 @@ public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.Time
 
     @Override
     public void onBindViewHolder(@NonNull TimeTableHolder holder, int position) {
-        for (int i = 0; i < Utils.ListOfTimeTable.size(); i++) {
-            Log.i("TAG", "Module: " + Utils.ListOfTimeTable.get(i).getModule());
-            Log.i("TAG", "Classroom: " + Utils.ListOfTimeTable.get(i).getLocation());
-            Log.i("TAG", "Start Time: " + Utils.ListOfTimeTable.get(i).getStartTime());
-            Log.i("TAG", "End Time: " + Utils.ListOfTimeTable.get(i).getEndTime());
-            Log.i("TAG", "Date: " + Utils.ListOfTimeTable.get(i).getDate());
-        }
         TimeTable timetable = timetableList.get(position);
 
         holder.DateTextView.setText(timetable.getDate());

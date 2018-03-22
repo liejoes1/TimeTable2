@@ -1,8 +1,10 @@
 package com.example.joes.timetable2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,16 +15,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    public RecyclerView TimeTableRecyclerView;
+    public static RecyclerView TimeTableRecyclerView;
     public TimeTableAdapter mAdapter;
+    public static LinearLayout NoClassLinearLayout, LoadingScreenLinearLayout;
+
+    public static boolean INTAKE_CHANGED;
+
+    public static String INTAKE_STATUS;
+
+
+    public static void setIntakeStatus(String intakeStatus) {
+        INTAKE_STATUS = intakeStatus;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         init();
 
         mAdapter = new TimeTableAdapter(this, Utils.ListOfTimeTable);
@@ -31,11 +43,47 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         TimeTableRecyclerView.setHasFixedSize(true);
         TimeTableRecyclerView.setAdapter(mAdapter);
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String value = sharedPreferences.getString("intakestatus", "");
+
+
+        if (value.equals("SUCCESS")) {
+            TimeTableRecyclerView.setVisibility(View.VISIBLE);
+            NoClassLinearLayout.setVisibility(View.GONE);
+        }
+        else if (value.equals("FAILED")) {
+            TimeTableRecyclerView.setVisibility(View.GONE);
+            NoClassLinearLayout.setVisibility(View.VISIBLE);
+        }
+        Log.i("LOG", "change intake: " + INTAKE_CHANGED);
+        if (INTAKE_CHANGED) {
+            showSnackbar(getWindow().getDecorView().findViewById(android.R.id.content),"Intake changed successfully",Snackbar.LENGTH_INDEFINITE);
+            INTAKE_CHANGED = false;
+        }
+
+    }
+
+    public void showSnackbar(View view, String message, int duration)
+    {
+        // Create snackbar
+        final Snackbar snackbar = Snackbar.make(view, message, duration);
+
+        // Set an action on it, and a handler
+        snackbar.setAction("Refresh", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setupSharedPreference();
+            }
+        });
+
+        snackbar.show();
     }
 
     private void setupSharedPreference() {
         Intent SplashScreenIntent = new Intent(this, SplashScreenActivity.class);
         startActivity(SplashScreenIntent);
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         new NetworkActivity.GetTimeTableInfo().execute(sharedPreferences.getString(getString(R.string.pref_timetable_key), getString(R.string.pref_timetable_default)));
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -45,7 +93,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private void init() {
         TimeTableRecyclerView = (RecyclerView) findViewById(R.id.rv_timetable);
+        NoClassLinearLayout = (LinearLayout) findViewById(R.id.ll_no_class);
+        LoadingScreenLinearLayout = (LinearLayout) findViewById(R.id.ll_loading_screen);
     }
+
 
 
     @Override
@@ -57,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             return true;
         } else if (IDGathered == R.id.action_refresh) {
             setupSharedPreference();
+            Log.i("TAG", "STATUS: " + INTAKE_STATUS);
         }
 
 
@@ -73,9 +125,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        if (s.equals(getString(R.string.pref_timetable_key))) {
-            setupSharedPreference();
-        }
+        INTAKE_CHANGED = true;
     }
 
     @Override

@@ -3,7 +3,9 @@ package com.example.joes.timetable2;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 
@@ -29,6 +31,8 @@ public class NetworkActivity {
     private static Context appContext;
     public static String ROOT_DIRECTORY_PATH;
     private static String ROOT_TEMP_PATH;
+
+
 
     private static final String TIMETABLE_LIST_URL = "https://webspace.apiit.edu.my/intake-timetable/TimetableIntakeList/TimetableIntakeList.xml";
     private static String TIMETABLE_INFO_BASE = "https://webspace.apiit.edu.my/intake-timetable/replyLink.php?stid=";
@@ -97,8 +101,27 @@ public class NetworkActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if (!s.equals("Time table for the current week is not available for this intake code.")) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext);
+            if (s.equals("Time table for the current week is not available for this intake code.")) {
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("intakestatus", "FAILED");
+                editor.apply();
+
+
+                Intent MainActivityIntent = new Intent(appContext, MainActivity.class);
+                appContext.startActivity(MainActivityIntent);
+                Log.i("TAG", "STATUS: " + "FAILED");
+
+            } else {
+                Log.i("TAG", "STATUS: " + "FAILED");
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("intakestatus", "SUCCESS");
+                editor.apply();
                 new GetTimeTableData().execute(s);
+
+
             }
         }
 
@@ -136,10 +159,8 @@ public class NetworkActivity {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-
             Intent MainActivityIntent = new Intent(appContext, MainActivity.class);
             appContext.startActivity(MainActivityIntent);
-
         }
     }
 

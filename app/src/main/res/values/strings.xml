@@ -3,4 +3,8 @@
     <string name="pref_timetable_label">Intake Code</string>
     <string name="pref_timetable_key" translatable="false">intakecode</string>
     <string name="pref_timetable_default" translatable="false">null</string>
+
+    <string name="pref_timetable_status_label">Intake Status</string>
+    <string name="pref_timetable_status_key" translatable="false">intakestatus</string>
+    <string name="pref_timetable_status_default" translatable="false">null</string>
 </resources>

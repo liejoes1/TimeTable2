@@ -19,6 +19,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import static com.example.joes.timetable2.MainActivity.INTAKE_STATUS;
+
 
 /**
  * Created by Joes on 21/3/2018.
@@ -45,7 +47,7 @@ public class SettingFragment extends PreferenceFragmentCompat implements
             Preference preference = preferenceScreen.getPreference(i);
             if (!(preference instanceof CheckBoxPreference)) {
 
-                String value = sharedPreferences.getString(preference.getKey(), "");
+                String value = sharedPreferences.getString(preference.getKey(), "").toUpperCase();
                 setPreferenceSummary(preference, value);
 
 
@@ -61,9 +63,11 @@ public class SettingFragment extends PreferenceFragmentCompat implements
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 for (int i = 0; i < Utils.ListOfAllIntake.size(); i++) {
+                    newValue = newValue.toString().toUpperCase();
                     System.out.println("List Of All intake INITIAL" + newValue);
                     if (newValue.equals(Utils.ListOfAllIntake.get(i).toString())) {
                         setPreferenceSummary(preference, newValue.toString());
+                        MainActivity.INTAKE_CHANGED = true;
                         return true;
                     }
                 }
@@ -105,15 +109,16 @@ public class SettingFragment extends PreferenceFragmentCompat implements
         }
 
         EditTextPreference editTextPreference = (EditTextPreference) getPreferenceScreen().findPreference(getString(R.string.pref_timetable_key));
-        final String value = sharedPreferences.getString(preference.getKey(), "");
 
         editTextPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 for (int i = 0; i < Utils.ListOfAllIntake.size(); i++) {
+                    newValue = newValue.toString().toUpperCase();
                     System.out.println("List Of All intake INITIAL" + newValue);
                     if (newValue.equals(Utils.ListOfAllIntake.get(i).toString())) {
                         setPreferenceSummary(preference, newValue.toString());
+                        MainActivity.INTAKE_CHANGED = true;
                         return true;
                     }
                 }
@@ -132,7 +137,7 @@ public class SettingFragment extends PreferenceFragmentCompat implements
         String sizeKey = getString(R.string.pref_timetable_key);
         if (preference.getKey().equals(sizeKey)) {
             String stringSize = (String) newValue;
-            String Address = stringSize;
+            String Address = stringSize.toUpperCase();
             Toast.makeText(getContext(), Address, Toast.LENGTH_SHORT).show();
         }
         return true;

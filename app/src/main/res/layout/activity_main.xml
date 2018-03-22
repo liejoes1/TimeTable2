@@ -11,9 +11,77 @@
 
 
     <android.support.v7.widget.RecyclerView
+        android:visibility="gone"
         android:id="@+id/rv_timetable"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
+    
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/ll_no_class"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_access_time_black_24dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="You don't have class this week"
+            android:textColor="#A3A5A5"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-light"
+            android:textAlignment="center"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please Check in Webspace"
+            android:textColor="#A3A5A5"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-light"
+            android:textAlignment="center"
+            />
+
+        //You don't have class this week
+        //Please check in Webspace
+        
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_loading_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TimeTable"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="loading..."
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
 
 </LinearLayout>
