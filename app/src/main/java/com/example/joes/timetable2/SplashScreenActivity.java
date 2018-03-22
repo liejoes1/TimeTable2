@@ -3,6 +3,7 @@ package com.example.joes.timetable2;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.CountDownTimer;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
@@ -43,10 +44,27 @@ public class SplashScreenActivity extends AppCompatActivity {
             //Means that it is not yet defined, first startup
             DownloadEverything();
         } else {
-            //If already defined earlier, just redownload and parse the data
+            //If already defined earlier, just parse the data, dont downlaod to save time
+
+
             try {
                 DataParsing.ParseTimeTableList(new FileInputStream(new File(NetworkActivity.ROOT_DIRECTORY_PATH, "TimeTableList.xml")));
-                new NetworkActivity.GetTimeTableInfo().execute(sharedPreferences.getString(getString(R.string.pref_timetable_key), getString(R.string.pref_timetable_default)));
+                DataParsing.ParseTimeTable(new FileInputStream(new File(NetworkActivity.ROOT_DIRECTORY_PATH, "TimeTable.xml")));
+                SplashScreenLinearLayout.setVisibility(View.VISIBLE);
+                new CountDownTimer(1000, 3000) {
+
+                    public void onTick(long millisUntilFinished) {
+                    }
+
+                    public void onFinish() {
+
+                        Intent MainActivityIntent = new Intent(context, MainActivity.class);
+                        context.startActivity(MainActivityIntent);
+                    }
+
+                }.start();
+
+
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

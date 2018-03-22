@@ -63,12 +63,11 @@ public class SettingFragment extends PreferenceFragmentCompat implements
                 for (int i = 0; i < Utils.ListOfAllIntake.size(); i++) {
                     System.out.println("List Of All intake INITIAL" + newValue);
                     if (newValue.equals(Utils.ListOfAllIntake.get(i).toString())) {
-                        Toast.makeText(getContext(), "Intake is OK", Toast.LENGTH_SHORT).show();
                         setPreferenceSummary(preference, newValue.toString());
                         return true;
                     }
                 }
-                Toast.makeText(getContext(), "Intake is BAD", Toast.LENGTH_SHORT).show();
+                Snackbar.make(getView(),"Intake is invalid, Please try again.",Snackbar.LENGTH_SHORT).show();
                 return false;
 
 
@@ -114,12 +113,11 @@ public class SettingFragment extends PreferenceFragmentCompat implements
                 for (int i = 0; i < Utils.ListOfAllIntake.size(); i++) {
                     System.out.println("List Of All intake INITIAL" + newValue);
                     if (newValue.equals(Utils.ListOfAllIntake.get(i).toString())) {
-                        Toast.makeText(getContext(), "Intake is OK", Toast.LENGTH_SHORT).show();
                         setPreferenceSummary(preference, newValue.toString());
                         return true;
                     }
                 }
-                Toast.makeText(getContext(), "Intake is BAD", Toast.LENGTH_SHORT).show();
+                Snackbar.make(getView(),"Intake is invalid, Please try again.",Snackbar.LENGTH_SHORT).show();
                 return false;
 
 
