@@ -10,6 +10,7 @@ import android.provider.ContactsContract;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
@@ -19,6 +20,9 @@ import android.widget.LinearLayout;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -51,6 +55,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             try {
                 DataParsing.ParseTimeTableList(new FileInputStream(new File(NetworkActivity.ROOT_DIRECTORY_PATH, "TimeTableList.xml")));
                 DataParsing.ParseTimeTable(new FileInputStream(new File(NetworkActivity.ROOT_DIRECTORY_PATH, "TimeTable.xml")));
+
                 SplashScreenLinearLayout.setVisibility(View.VISIBLE);
                 new CountDownTimer(1000, 3000) {
 

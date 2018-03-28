@@ -1,59 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.joes.timetable2.MainActivity">
 
-
-
-    <android.support.v7.widget.RecyclerView
-        android:visibility="gone"
-        android:id="@+id/rv_timetable"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/rl_show_class"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
-    
+        tools:context=".MainActivity">
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@color/colorPrimary"
+            android:elevation="6dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:background="@color/colorPrimary"
+            android:elevation="6dp"
+            app:tabIndicatorColor="#ff00ff"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="#ffffff"
+            app:tabTextColor="#d3d3d3" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tab_layout" />
+
+    </RelativeLayout>
+
+
     <LinearLayout
-        android:visibility="gone"
         android:id="@+id/ll_no_class"
-        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_access_time_black_24dp"
-            />
+            android:src="@drawable/ic_access_time_black_24dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
             android:text="You don't have class this week"
-            android:textColor="#A3A5A5"
-            android:textSize="18sp"
-            android:fontFamily="sans-serif-light"
             android:textAlignment="center"
-            />
+            android:textColor="#A3A5A5"
+            android:textSize="18sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Please Check in Webspace"
-            android:textColor="#A3A5A5"
-            android:textSize="18sp"
             android:fontFamily="sans-serif-light"
+            android:text="Please Check in Webspace"
             android:textAlignment="center"
-            />
+            android:textColor="#A3A5A5"
+            android:textSize="18sp" />
 
         //You don't have class this week
         //Please check in Webspace
-        
+
     </LinearLayout>
 
     <LinearLayout

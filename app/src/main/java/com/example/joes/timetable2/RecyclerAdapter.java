@@ -19,13 +19,13 @@ import java.util.List;
  * Created by Joes on 17/3/2018.
  */
 
-public class TimeTableAdapter extends RecyclerView.Adapter<TimeTableAdapter.TimeTableHolder> {
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.TimeTableHolder> {
 
     private Context context;
     private List<TimeTable> timetableList;
 
 
-    public TimeTableAdapter(Context context, List<TimeTable> timetableList) {
+    public RecyclerAdapter( List<TimeTable> timetableList, Context context) {
         this.context = context;
         this.timetableList = timetableList;
     }

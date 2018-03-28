@@ -9,6 +9,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.FileInputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import fr.arnaudguyon.xmltojsonlib.XmlToJson;
 
@@ -62,8 +66,46 @@ public class DataParsing {
                 }
             }
 
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String tempDate = dateFormat.parse(Utils.ListOfTimeTable.get(0).getDate()).toString().substring(0, 4);
+            Log.i("CUCK", "WELCOME" + tempDate);
+            for (int i = 0; i < Utils.ListOfTimeTable.size(); i++) {
+
+                if (dateFormat.parse(Utils.ListOfTimeTable.get(i).getDate()).toString().substring(0, 3).equals("Mon")){
+
+                    Utils.MondayTimeTable.add ((Utils.ListOfTimeTable.get(i)));
+
+                }
+                else if (dateFormat.parse(Utils.ListOfTimeTable.get(i).getDate()).toString().substring(0, 3).equals("Tue")){
+
+                    Utils.TuesdayTimeTable.add ((Utils.ListOfTimeTable.get(i)));
+
+                }
+                else if (dateFormat.parse(Utils.ListOfTimeTable.get(i).getDate()).toString().substring(0, 3).equals("Wed")){
+
+                    Utils.WednesdayTimeTable.add ((Utils.ListOfTimeTable.get(i)));
+
+                }
+                else if (dateFormat.parse(Utils.ListOfTimeTable.get(i).getDate()).toString().substring(0, 3).equals("Thu")){
+
+                    Utils.ThursdayTimeTable.add ((Utils.ListOfTimeTable.get(i)));
+
+                }
+                else if (dateFormat.parse(Utils.ListOfTimeTable.get(i).getDate()).toString().substring(0, 3).equals("Fri")){
+
+                    Utils.FridayTimeTable.add ((Utils.ListOfTimeTable.get(i)));
+
+                }
+            }
+
+            //Check Friday
+
+
+
 
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
             e.printStackTrace();
         }
     }

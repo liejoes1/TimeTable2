@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 
 import java.io.File;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -17,6 +18,12 @@ public final class Utils {
 
     public static ArrayList<String> ListOfAllIntake = new ArrayList<>();
     public static ArrayList<TimeTable> ListOfTimeTable = new ArrayList<>();
+
+    public static ArrayList<TimeTable> MondayTimeTable = new ArrayList<>();
+    public static ArrayList<TimeTable> TuesdayTimeTable = new ArrayList<>();
+    public static ArrayList<TimeTable> WednesdayTimeTable = new ArrayList<>();
+    public static ArrayList<TimeTable> ThursdayTimeTable = new ArrayList<>();
+    public static ArrayList<TimeTable> FridayTimeTable = new ArrayList<>();
     private Utils() {
         // no instance
 

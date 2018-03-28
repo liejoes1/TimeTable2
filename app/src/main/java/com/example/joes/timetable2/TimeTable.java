@@ -6,6 +6,7 @@ package com.example.joes.timetable2;
 
 public class TimeTable {
 
+
     private String Date;
     private String StartTime;
     private String EndTime;
