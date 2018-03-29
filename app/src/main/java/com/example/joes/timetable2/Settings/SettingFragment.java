@@ -1,11 +1,8 @@
-package com.example.joes.timetable2;
+package com.example.joes.timetable2.Settings;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.EditTextPreference;
@@ -13,13 +10,11 @@ import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import static com.example.joes.timetable2.MainActivity.INTAKE_STATUS;
+import com.example.joes.timetable2.MainActivity;
+import com.example.joes.timetable2.R;
+import com.example.joes.timetable2.Utils.Utils;
 
 
 /**

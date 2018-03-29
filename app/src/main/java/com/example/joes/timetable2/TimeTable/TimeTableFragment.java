@@ -1,21 +1,27 @@
-package com.example.joes.timetable2;
+package com.example.joes.timetable2.TimeTable;
 
 import android.support.v4.app.Fragment;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import java.sql.Time;
+import com.example.joes.timetable2.MainActivity;
+import com.example.joes.timetable2.R;
+import com.example.joes.timetable2.Utils.Utils;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class TimeTableFragment extends Fragment {
@@ -25,6 +31,7 @@ public class TimeTableFragment extends Fragment {
 
     public static RecyclerView TimeTableRecyclerView;
     public RecyclerAdapter mAdapter;
+    public static TextView DateTextView;
 
     public List<TimeTable> dayOnly;
 
@@ -38,6 +45,8 @@ public class TimeTableFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+
 
         dayOnly = new ArrayList<>();
         Bundle args = getArguments();
@@ -63,7 +72,16 @@ public class TimeTableFragment extends Fragment {
         }
         Log.i("Danke", "Title: " + dayOnly.get(0).getDate());
         View view = inflater.inflate(R.layout.fragment_timetable, null);
-
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM");
+        Date date = null;
+        try {
+             date = df.parse(dayOnly.get(0).getDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        DateTextView = view.findViewById(R.id.dateTextView);
+            DateTextView.setText(sdf.format(date));
 
         TimeTableRecyclerView = view.findViewById(R.id.rv_timetable);
         Log.i("Cunt", "awd" + dayOnly.get(1).getLocation());
@@ -80,6 +98,8 @@ public class TimeTableFragment extends Fragment {
     }
 
     public static TimeTableFragment newInstance(int position) {
+
+
         TimeTableFragment blackFragment = new TimeTableFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, position);

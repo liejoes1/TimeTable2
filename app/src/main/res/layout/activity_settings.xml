@@ -5,7 +5,7 @@
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/activity_setting"
-        android:name="com.example.joes.timetable2.SettingFragment"
+        android:name="com.example.joes.timetable2.Settings.SettingFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />

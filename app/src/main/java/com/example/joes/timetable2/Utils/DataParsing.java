@@ -1,8 +1,11 @@
-package com.example.joes.timetable2;
+package com.example.joes.timetable2.Utils;
 
 import android.content.Context;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+
+import com.example.joes.timetable2.TimeTable.TimeTable;
+import com.example.joes.timetable2.Utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,7 +15,6 @@ import java.io.FileInputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import fr.arnaudguyon.xmltojsonlib.XmlToJson;
 
@@ -65,6 +67,11 @@ public class DataParsing {
                     Utils.ListOfTimeTable.add(new TimeTable(Date, StartTime, EndTime, Classroom, Module));
                 }
             }
+            Utils.MondayTimeTable.clear();
+            Utils.TuesdayTimeTable.clear();
+            Utils.WednesdayTimeTable.clear();
+            Utils.ThursdayTimeTable.clear();
+            Utils.FridayTimeTable.clear();
 
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String tempDate = dateFormat.parse(Utils.ListOfTimeTable.get(0).getDate()).toString().substring(0, 4);

@@ -1,4 +1,4 @@
-package com.example.joes.timetable2;
+package com.example.joes.timetable2.Utils;
 
 /**
  * Created by Joes on 13/3/2018.
@@ -8,10 +8,10 @@ import android.content.Context;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 
+import com.example.joes.timetable2.TimeTable.TimeTable;
+
 import java.io.File;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public final class Utils {

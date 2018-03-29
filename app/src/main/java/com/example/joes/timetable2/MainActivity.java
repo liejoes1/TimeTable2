@@ -1,6 +1,5 @@
 package com.example.joes.timetable2;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -9,15 +8,21 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.example.joes.timetable2.Settings.SettingsActivity;
+import com.example.joes.timetable2.TimeTable.FragmentPager;
+import com.example.joes.timetable2.TimeTable.RecyclerAdapter;
+import com.example.joes.timetable2.TimeTable.TimeTableFragment;
+import com.example.joes.timetable2.Utils.Utils;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -29,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     public static RecyclerView TimeTableRecyclerView;
     public RecyclerAdapter mAdapter;
     public static LinearLayout NoClassLinearLayout, LoadingScreenLinearLayout;
+    public static RelativeLayout ShowClassRelativeLayout;
 
     public static boolean INTAKE_CHANGED;
 
@@ -44,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         setContentView(R.layout.activity_main);
         init();
         TimeTableFragment.getContext(getApplicationContext());
-
+        ShowClassRelativeLayout.setVisibility(View.VISIBLE);
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss Z");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date result;
@@ -103,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
     private void setupSharedPreference() {
+        ShowClassRelativeLayout.setVisibility(View.GONE);
         Intent SplashScreenIntent = new Intent(this, SplashScreenActivity.class);
         startActivity(SplashScreenIntent);
 
@@ -117,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         TimeTableRecyclerView = (RecyclerView) findViewById(R.id.rv_timetable);
         NoClassLinearLayout = (LinearLayout) findViewById(R.id.ll_no_class);
         LoadingScreenLinearLayout = (LinearLayout) findViewById(R.id.ll_loading_screen);
-
+        ShowClassRelativeLayout = (RelativeLayout) findViewById(R.id.rl_show_class);
 
     }
 

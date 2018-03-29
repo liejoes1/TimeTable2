@@ -1,17 +1,14 @@
-package com.example.joes.timetable2;
+package com.example.joes.timetable2.TimeTable;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.view.LayoutInflater;
-import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.joes.timetable2.R;
 
 import java.util.List;
 
@@ -42,7 +39,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.TimeTa
     public void onBindViewHolder(@NonNull TimeTableHolder holder, int position) {
         TimeTable timetable = timetableList.get(position);
 
-        holder.DateTextView.setText(timetable.getDate());
         holder.TitleTextView.setText(timetable.getModule());
         holder.RoomTextView.setText(timetable.getLocation());
         String StartTime = timetable.getStartTime().substring(11,16);
@@ -57,13 +53,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.TimeTa
 
     class TimeTableHolder extends RecyclerView.ViewHolder {
 
-        TextView DateTextView, TitleTextView, RoomTextView, LocationTextView, time;
+        TextView TitleTextView, RoomTextView, LocationTextView, time;
 
 
         public TimeTableHolder(View itemView) {
             super(itemView);
-
-            DateTextView = itemView.findViewById(R.id.date);
             TitleTextView = itemView.findViewById(R.id.course_title);
             RoomTextView = itemView.findViewById(R.id.course_room);
             time = itemView.findViewById(R.id.time);

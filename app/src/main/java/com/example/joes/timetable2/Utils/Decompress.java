@@ -1,4 +1,4 @@
-package com.example.joes.timetable2;
+package com.example.joes.timetable2.Utils;
 
 /**
  * Created by Joes on 14/3/2018.

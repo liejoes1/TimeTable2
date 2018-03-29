@@ -1,13 +1,15 @@
 package com.example.joes.timetable2;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.View;
+
+import com.example.joes.timetable2.Utils.DataParsing;
+import com.example.joes.timetable2.Utils.Decompress;
+import com.example.joes.timetable2.Utils.Utils;
 
 import java.io.BufferedReader;
 import java.io.File;

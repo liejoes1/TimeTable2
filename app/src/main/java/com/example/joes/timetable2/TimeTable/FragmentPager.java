@@ -1,9 +1,11 @@
-package com.example.joes.timetable2;
+package com.example.joes.timetable2.TimeTable;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
+
+import com.example.joes.timetable2.MainActivity;
+import com.example.joes.timetable2.TimeTable.TimeTableFragment;
 
 import java.util.ArrayList;
 
