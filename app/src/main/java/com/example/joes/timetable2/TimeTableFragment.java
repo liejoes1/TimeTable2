@@ -61,13 +61,13 @@ public class TimeTableFragment extends Fragment {
                 dayOnly.addAll(Utils.FridayTimeTable);
                 break;
         }
-
+        Log.i("Danke", "Title: " + dayOnly.get(0).getDate());
         View view = inflater.inflate(R.layout.fragment_timetable, null);
 
 
         TimeTableRecyclerView = view.findViewById(R.id.rv_timetable);
         Log.i("Cunt", "awd" + dayOnly.get(1).getLocation());
-        mAdapter = new RecyclerAdapter(Utils.ListOfTimeTable, context);
+        mAdapter = new RecyclerAdapter(dayOnly, context);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
         TimeTableRecyclerView.setLayoutManager(mLayoutManager);
         TimeTableRecyclerView.setHasFixedSize(true);
