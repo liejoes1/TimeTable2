@@ -14,7 +14,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
-import com.example.joes.timetable2.TimeTable.TimeTable;
 import com.example.joes.timetable2.Utils.DataParsing;
 import com.example.joes.timetable2.Utils.Utils;
 
@@ -25,10 +24,10 @@ import java.io.FileNotFoundException;
 public class SplashScreenActivity extends AppCompatActivity {
 
     //Layout Declaration
-    public static LinearLayout SplashScreenLinearLayout, IntakeScreenLinearLayout, LoadingScreenLinearLayout;
-    public static Context context;
-    public static AutoCompleteTextView TimeTableListAutoCompleteTextView;
-    public static Button TimeTableSubmitButton;
+    public LinearLayout SplashScreenLinearLayout, IntakeScreenLinearLayout, LoadingScreenLinearLayout;
+    public Context context;
+    public AutoCompleteTextView TimeTableListAutoCompleteTextView;
+    public Button TimeTableSubmitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,16 +38,15 @@ public class SplashScreenActivity extends AppCompatActivity {
         //Provide Context
         NetworkActivity.setContext(this);
         context = this;
+
         // If Data is not exist - Initial Startup Only
         SplashScreenLinearLayout.setVisibility(View.VISIBLE);
-
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (sharedPreferences.getString(getString(R.string.pref_timetable_key), getString(R.string.pref_timetable_default)).equals("null")) {
             //Means that it is not yet defined, first startup
             DownloadEverything();
         } else {
             //If already defined earlier, just parse the data, dont downlaod to save time
-
 
             try {
                 DataParsing.ParseTimeTableList(new FileInputStream(new File(NetworkActivity.ROOT_DIRECTORY_PATH, "TimeTableList.xml")));
@@ -72,27 +70,18 @@ public class SplashScreenActivity extends AppCompatActivity {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-
-
         }
 
 
-
     }
 
-
-    private void TempVal() {
-        Utils.ListOfTimeTable.add(new TimeTable("21 Sept", "2018-03-19 13:45:00 +0800", "2018-03-19 15:45:00 +0800", "B - 7 -1", "CS"));
-        Intent MainActivityIntent = new Intent(context, MainActivity.class);
-        context.startActivity(MainActivityIntent);
-    }
     private void initVar() {
-        SplashScreenLinearLayout = (LinearLayout) findViewById(R.id.ll_splash_screen);
-        IntakeScreenLinearLayout = (LinearLayout) findViewById(R.id.ll_intake_screen);
-        LoadingScreenLinearLayout = (LinearLayout) findViewById(R.id.ll_loading_screen);
+        SplashScreenLinearLayout = findViewById(R.id.ll_splash_screen);
+        IntakeScreenLinearLayout = findViewById(R.id.ll_intake_screen);
+        LoadingScreenLinearLayout = findViewById(R.id.ll_loading_screen);
 
-        TimeTableSubmitButton = (Button) findViewById(R.id.bt_timetable_submit);
-        TimeTableListAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.actv_timetable_list);
+        TimeTableSubmitButton = findViewById(R.id.bt_timetable_submit);
+        TimeTableListAutoCompleteTextView = findViewById(R.id.actv_timetable_list);
     }
 
     private void DownloadEverything() {
@@ -116,10 +105,11 @@ public class SplashScreenActivity extends AppCompatActivity {
         TimeTableSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Boolean INTAKE_NAME_CHECK = false;
                 HideKeyboard();
                 for (int TotalIntake = 0; TotalIntake < Utils.ListOfAllIntake.size(); TotalIntake++) {
                     if (TimeTableListAutoCompleteTextView.getText().toString().toUpperCase().equals(Utils.ListOfAllIntake.get(TotalIntake))) {
-
+                        INTAKE_NAME_CHECK = true;
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putString(getString(R.string.pref_timetable_key), TimeTableListAutoCompleteTextView.getText().toString());
                         editor.apply();
@@ -128,7 +118,10 @@ public class SplashScreenActivity extends AppCompatActivity {
                         new NetworkActivity.GetTimeTableInfo().execute(TimeTableListAutoCompleteTextView.getText().toString());
                     }
                 }
-                Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content),"Intake is invalid, Please try again.",Snackbar.LENGTH_SHORT).show();
+                if (!INTAKE_NAME_CHECK) {
+                    Snackbar.make(getWindow().getDecorView().findViewById(android.R.id.content), "Intake is invalid, Please try again.", Snackbar.LENGTH_SHORT).show();
+                }
+
             }
 
         });
@@ -137,7 +130,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     private void HideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            assert imm != null;
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }

@@ -9,13 +9,12 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:visibility="gone"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/rl_show_class"
+        android:id="@+id/rl_display_data"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="gone"
         tools:context=".MainActivity">
-
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -25,7 +24,6 @@
             android:background="@color/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
 
 
         <android.support.design.widget.TabLayout
@@ -46,17 +44,17 @@
             android:layout_below="@+id/tab_layout" />
 
 
-
     </RelativeLayout>
 
 
     <LinearLayout
+
+        android:visibility="gone"
         android:id="@+id/ll_no_class"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
 
         <ImageView
             android:layout_width="match_parent"
@@ -67,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
-            android:text="You don't have class this week"
+            android:text="@string/string_no_class_header"
             android:textAlignment="center"
             android:textColor="#A3A5A5"
             android:textSize="18sp" />
@@ -76,13 +74,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
-            android:text="Please Check in Webspace"
+            android:text="@string/string_no_class_description"
             android:textAlignment="center"
             android:textColor="#A3A5A5"
             android:textSize="18sp" />
-
-        //You don't have class this week
-        //Please check in Webspace
 
     </LinearLayout>
 
@@ -98,7 +93,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TimeTable"
+            android:text="@string/logo_header"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="40sp"
@@ -108,7 +103,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
-            android:text="loading..."
+            android:text="@string/logo_description"
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="16sp" />

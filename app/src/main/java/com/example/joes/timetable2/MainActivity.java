@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,10 +32,10 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    public static RecyclerView TimeTableRecyclerView;
+
     public RecyclerAdapter mAdapter;
     public static LinearLayout NoClassLinearLayout, LoadingScreenLinearLayout;
-    public static RelativeLayout ShowClassRelativeLayout;
+    public static RelativeLayout DisplayClassRelativeLayout;
 
     public static boolean INTAKE_CHANGED;
 
@@ -49,32 +50,23 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+        this.getSupportActionBar().show();
+        //Provide Context
         TimeTableFragment.getContext(getApplicationContext());
-        ShowClassRelativeLayout.setVisibility(View.VISIBLE);
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss Z");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date result;
-        try {
-            result = df.parse(Utils.ListOfTimeTable.get(0).getDate());
-            Log.i("TAG", "TIME: ");
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
         String value = sharedPreferences.getString("intakestatus", "");
 
-/*
+
         if (value.equals("SUCCESS")) {
-            TimeTableRecyclerView.setVisibility(View.VISIBLE);
+            DisplayClassRelativeLayout.setVisibility(View.VISIBLE);
             NoClassLinearLayout.setVisibility(View.GONE);
         }
         else if (value.equals("FAILED")) {
-            TimeTableRecyclerView.setVisibility(View.GONE);
+            DisplayClassRelativeLayout.setVisibility(View.GONE);
             NoClassLinearLayout.setVisibility(View.VISIBLE);
         }
-        */
+
         Log.i("LOG", "change intake: " + INTAKE_CHANGED);
         if (INTAKE_CHANGED) {
             showSnackbar(getWindow().getDecorView().findViewById(android.R.id.content),"Intake changed successfully",Snackbar.LENGTH_LONG);
@@ -97,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         // Create snackbar
         final Snackbar snackbar = Snackbar.make(view, message, duration);
 
+
         // Set an action on it, and a handler
         snackbar.setAction("Refresh", new View.OnClickListener() {
             @Override
@@ -109,9 +102,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
     private void setupSharedPreference() {
-        ShowClassRelativeLayout.setVisibility(View.GONE);
-        Intent SplashScreenIntent = new Intent(this, SplashScreenActivity.class);
-        startActivity(SplashScreenIntent);
+        this.getSupportActionBar().hide();
+        DisplayClassRelativeLayout.setVisibility(View.GONE);
+        LoadingScreenLinearLayout.setVisibility(View.VISIBLE);
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         new NetworkActivity.GetTimeTableInfo().execute(sharedPreferences.getString(getString(R.string.pref_timetable_key), getString(R.string.pref_timetable_default)));
@@ -121,10 +114,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
 
     private void init() {
-        TimeTableRecyclerView = (RecyclerView) findViewById(R.id.rv_timetable);
         NoClassLinearLayout = (LinearLayout) findViewById(R.id.ll_no_class);
         LoadingScreenLinearLayout = (LinearLayout) findViewById(R.id.ll_loading_screen);
-        ShowClassRelativeLayout = (RelativeLayout) findViewById(R.id.rl_show_class);
+        DisplayClassRelativeLayout = (RelativeLayout) findViewById(R.id.rl_display_data);
+
 
     }
 

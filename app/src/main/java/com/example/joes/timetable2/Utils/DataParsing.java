@@ -10,8 +10,10 @@ import com.example.joes.timetable2.Utils.Utils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.FileInputStream;
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,21 +53,42 @@ public class DataParsing {
             JSONObject RootObject = new JSONObject(xmlToJson.toString());
             JSONObject WeekObject = RootObject.getJSONObject("week");
             JSONArray DayArray = WeekObject.getJSONArray("day");
-            Log.i("LOG", "Parse Timetable: " + DayArray);
+
+
 
             for (int DayIndex = 0; DayIndex < DayArray.length(); DayIndex++) {
                 JSONObject DailyObject = DayArray.getJSONObject(DayIndex);
-                JSONArray ClassArray = DailyObject.getJSONArray("class");
-                for (int DailyArrayIndex = 0; DailyArrayIndex < ClassArray.length(); DailyArrayIndex++) {
-                    JSONObject SubjectObject = ClassArray.getJSONObject(DailyArrayIndex);
-                    String Module = SubjectObject.getString("subject");
-                    String Classroom = SubjectObject.getString("location");
-                    String StartTime = SubjectObject.getString("start");
-                    String EndTime = SubjectObject.getString("end");
+                Log.i("LOG", "Parse Timetable: " + DailyObject);
+                if (DailyObject.toString().substring(0, 10).equals("{\"class\":[")) {
+                    JSONArray ClassArray = DailyObject.getJSONArray("class");
+                    for (int DailyArrayIndex = 0; DailyArrayIndex < ClassArray.length(); DailyArrayIndex++) {
+                        JSONObject SubjectObject = ClassArray.getJSONObject(DailyArrayIndex);
+                        String Module = SubjectObject.getString("subject");
+                        String Classroom = SubjectObject.getString("location");
+                        String StartTime = SubjectObject.getString("start");
+                        String EndTime = SubjectObject.getString("end");
+                        String Date = StartTime.substring(0, 10);
+
+                        Utils.ListOfTimeTable.add(new TimeTable(Date, StartTime, EndTime, Classroom, Module));
+                    }
+                } else {
+
+
+                    //It is an object
+                    JSONObject ClassObject = DailyObject.getJSONObject("class");
+
+                    String Module = ClassObject.getString("subject");
+                    String Classroom = ClassObject.getString("location");
+                    String StartTime = ClassObject.getString("start");
+                    String EndTime = ClassObject.getString("end");
                     String Date = StartTime.substring(0, 10);
 
                     Utils.ListOfTimeTable.add(new TimeTable(Date, StartTime, EndTime, Classroom, Module));
                 }
+
+
+
+
             }
             Utils.MondayTimeTable.clear();
             Utils.TuesdayTimeTable.clear();
@@ -75,39 +98,32 @@ public class DataParsing {
 
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String tempDate = dateFormat.parse(Utils.ListOfTimeTable.get(0).getDate()).toString().substring(0, 4);
-            Log.i("CUCK", "WELCOME" + tempDate);
             for (int i = 0; i < Utils.ListOfTimeTable.size(); i++) {
 
-                if (dateFormat.parse(Utils.ListOfTimeTable.get(i).getDate()).toString().substring(0, 3).equals("Mon")){
+                if (dateFormat.parse(Utils.ListOfTimeTable.get(i).getDate()).toString().substring(0, 3).equals("Mon")) {
 
-                    Utils.MondayTimeTable.add ((Utils.ListOfTimeTable.get(i)));
+                    Utils.MondayTimeTable.add((Utils.ListOfTimeTable.get(i)));
 
-                }
-                else if (dateFormat.parse(Utils.ListOfTimeTable.get(i).getDate()).toString().substring(0, 3).equals("Tue")){
+                } else if (dateFormat.parse(Utils.ListOfTimeTable.get(i).getDate()).toString().substring(0, 3).equals("Tue")) {
 
-                    Utils.TuesdayTimeTable.add ((Utils.ListOfTimeTable.get(i)));
+                    Utils.TuesdayTimeTable.add((Utils.ListOfTimeTable.get(i)));
 
-                }
-                else if (dateFormat.parse(Utils.ListOfTimeTable.get(i).getDate()).toString().substring(0, 3).equals("Wed")){
+                } else if (dateFormat.parse(Utils.ListOfTimeTable.get(i).getDate()).toString().substring(0, 3).equals("Wed")) {
 
-                    Utils.WednesdayTimeTable.add ((Utils.ListOfTimeTable.get(i)));
+                    Utils.WednesdayTimeTable.add((Utils.ListOfTimeTable.get(i)));
 
-                }
-                else if (dateFormat.parse(Utils.ListOfTimeTable.get(i).getDate()).toString().substring(0, 3).equals("Thu")){
+                } else if (dateFormat.parse(Utils.ListOfTimeTable.get(i).getDate()).toString().substring(0, 3).equals("Thu")) {
 
-                    Utils.ThursdayTimeTable.add ((Utils.ListOfTimeTable.get(i)));
+                    Utils.ThursdayTimeTable.add((Utils.ListOfTimeTable.get(i)));
 
-                }
-                else if (dateFormat.parse(Utils.ListOfTimeTable.get(i).getDate()).toString().substring(0, 3).equals("Fri")){
+                } else if (dateFormat.parse(Utils.ListOfTimeTable.get(i).getDate()).toString().substring(0, 3).equals("Fri")) {
 
-                    Utils.FridayTimeTable.add ((Utils.ListOfTimeTable.get(i)));
+                    Utils.FridayTimeTable.add((Utils.ListOfTimeTable.get(i)));
 
                 }
             }
 
             //Check Friday
-
-
 
 
         } catch (JSONException e) {

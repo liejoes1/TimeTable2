@@ -111,8 +111,6 @@ public class NetworkActivity {
                 editor.apply();
 
 
-                Intent MainActivityIntent = new Intent(appContext, MainActivity.class);
-                appContext.startActivity(MainActivityIntent);
                 Log.i("TAG", "STATUS: " + "FAILED");
 
             } else {
@@ -163,6 +161,7 @@ public class NetworkActivity {
             }
             Intent MainActivityIntent = new Intent(appContext, MainActivity.class);
             appContext.startActivity(MainActivityIntent);
+
         }
     }
 

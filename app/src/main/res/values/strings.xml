@@ -7,4 +7,11 @@
     <string name="pref_timetable_status_label">Intake Status</string>
     <string name="pref_timetable_status_key" translatable="false">intakestatus</string>
     <string name="pref_timetable_status_default" translatable="false">null</string>
+    <string name="string_no_class_header">You don\'t have class this week</string>
+    <string name="string_no_class_description">Please Check in Webspace</string>
+    <string name="time">Time</string>
+    <string name="logo_header">TimeTable</string>
+    <string name="logo_description">loading...</string>
+    <string name="welcome_intake">Welcome, Please enter your code below</string>
+    <string name="submit">Submit</string>
 </resources>

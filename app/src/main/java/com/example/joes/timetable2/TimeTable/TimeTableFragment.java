@@ -84,7 +84,6 @@ public class TimeTableFragment extends Fragment {
             DateTextView.setText(sdf.format(date));
 
         TimeTableRecyclerView = view.findViewById(R.id.rv_timetable);
-        Log.i("Cunt", "awd" + dayOnly.get(1).getLocation());
         mAdapter = new RecyclerAdapter(dayOnly, context);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
         TimeTableRecyclerView.setLayoutManager(mLayoutManager);
