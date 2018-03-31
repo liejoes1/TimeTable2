@@ -49,9 +49,10 @@ public class TimeTableFragment extends Fragment {
 
 
         dayOnly = new ArrayList<>();
+        dayOnly.clear();
         Bundle args = getArguments();
         int SectionNumbers = args.getInt(ARG_SECTION_NUMBER);
-        Log.i("TAG","Section Number: " + SectionNumbers);
+
 
         switch (SectionNumbers) {
             case 0:
@@ -70,18 +71,25 @@ public class TimeTableFragment extends Fragment {
                 dayOnly.addAll(Utils.FridayTimeTable);
                 break;
         }
-        Log.i("Danke", "Title: " + dayOnly.get(0).getDate());
         View view = inflater.inflate(R.layout.fragment_timetable, null);
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM");
         Date date = null;
         try {
-             date = df.parse(dayOnly.get(0).getDate());
+
+             if (dayOnly.isEmpty()) {
+
+             } else {
+                 date = df.parse(dayOnly.get(0).getDate());
+                 DateTextView = view.findViewById(R.id.dateTextView);
+                 DateTextView.setText(sdf.format(date));
+             }
+
         } catch (ParseException e) {
             e.printStackTrace();
+
         }
-        DateTextView = view.findViewById(R.id.dateTextView);
-            DateTextView.setText(sdf.format(date));
+
 
         TimeTableRecyclerView = view.findViewById(R.id.rv_timetable);
         mAdapter = new RecyclerAdapter(dayOnly, context);

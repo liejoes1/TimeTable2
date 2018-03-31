@@ -9,7 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             NoClassLinearLayout.setVisibility(View.VISIBLE);
         }
 
-        Log.i("LOG", "change intake: " + INTAKE_CHANGED);
+
         if (INTAKE_CHANGED) {
             showSnackbar(getWindow().getDecorView().findViewById(android.R.id.content),"Intake changed successfully",Snackbar.LENGTH_LONG);
             INTAKE_CHANGED = false;
@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             @Override
             public void onClick(View v) {
                 setupSharedPreference();
+                INTAKE_CHANGED = false;
             }
         });
 
@@ -103,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private void setupSharedPreference() {
         this.getSupportActionBar().hide();
+        NoClassLinearLayout.setVisibility(View.GONE);
         DisplayClassRelativeLayout.setVisibility(View.GONE);
         LoadingScreenLinearLayout.setVisibility(View.VISIBLE);
 
@@ -132,7 +134,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             return true;
         } else if (IDGathered == R.id.action_refresh) {
             setupSharedPreference();
-            Log.i("TAG", "STATUS: " + INTAKE_STATUS);
         }
 
 

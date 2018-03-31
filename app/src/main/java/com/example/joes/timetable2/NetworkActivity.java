@@ -109,7 +109,8 @@ public class NetworkActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("intakestatus", "FAILED");
                 editor.apply();
-
+                Intent MainActivityIntent = new Intent(appContext, MainActivity.class);
+                appContext.startActivity(MainActivityIntent);
 
                 Log.i("TAG", "STATUS: " + "FAILED");
 

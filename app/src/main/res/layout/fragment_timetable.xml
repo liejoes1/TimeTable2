@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/dateTextView"
-        android:text="12 May 2018"
+        android:text="No Class"
         android:textSize="25sp"
         android:background="@color/colorPrimary"
         android:layout_height="wrap_content"

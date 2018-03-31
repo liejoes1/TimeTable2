@@ -58,7 +58,7 @@ public class DataParsing {
 
             for (int DayIndex = 0; DayIndex < DayArray.length(); DayIndex++) {
                 JSONObject DailyObject = DayArray.getJSONObject(DayIndex);
-                Log.i("LOG", "Parse Timetable: " + DailyObject);
+
                 if (DailyObject.toString().substring(0, 10).equals("{\"class\":[")) {
                     JSONArray ClassArray = DailyObject.getJSONArray("class");
                     for (int DailyArrayIndex = 0; DailyArrayIndex < ClassArray.length(); DailyArrayIndex++) {
@@ -71,8 +71,7 @@ public class DataParsing {
 
                         Utils.ListOfTimeTable.add(new TimeTable(Date, StartTime, EndTime, Classroom, Module));
                     }
-                } else {
-
+                } else if (DailyObject.toString().substring(0, 10).equals("{\"class\":{")){
 
                     //It is an object
                     JSONObject ClassObject = DailyObject.getJSONObject("class");
@@ -84,6 +83,9 @@ public class DataParsing {
                     String Date = StartTime.substring(0, 10);
 
                     Utils.ListOfTimeTable.add(new TimeTable(Date, StartTime, EndTime, Classroom, Module));
+                } else {
+                    //No Class for that day
+                    //Do Nothing, dont add.
                 }
 
 
