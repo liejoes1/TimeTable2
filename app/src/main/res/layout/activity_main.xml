@@ -46,7 +46,6 @@
 
     </RelativeLayout>
 
-
     <LinearLayout
 
         android:visibility="gone"
@@ -107,6 +106,40 @@
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+
+        android:visibility="gone"
+        android:id="@+id/ll_no_internet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_not_interested_black_24dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="You don't have internet connection"
+            android:textAlignment="center"
+            android:textColor="#A3A5A5"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:text="Please check your network and try again"
+            android:textAlignment="center"
+            android:textColor="#A3A5A5"
+            android:textSize="18sp" />
+
     </LinearLayout>
 
 </LinearLayout>

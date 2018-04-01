@@ -3,6 +3,7 @@ package com.example.joes.timetable2;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -34,15 +35,18 @@ public class NetworkActivity {
     public static String ROOT_DIRECTORY_PATH;
     private static String ROOT_TEMP_PATH;
 
-
-
     private static final String TIMETABLE_LIST_URL = "https://webspace.apiit.edu.my/intake-timetable/TimetableIntakeList/TimetableIntakeList.xml";
     private static String TIMETABLE_INFO_BASE = "https://webspace.apiit.edu.my/intake-timetable/replyLink.php?stid=";
 
+    public static boolean INITIAL_APP_LAUNCH;
 
     public static void setContext(Context context) {
         appContext = context;
         CreateFolder();
+    }
+
+    public static void setInitialAppLaunch(boolean initialAppLaunch) {
+        INITIAL_APP_LAUNCH = initialAppLaunch;
     }
 
     public static class GetTimeTableList extends AsyncTask<Void, Void, Void> {
@@ -52,8 +56,7 @@ public class NetworkActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                URL url = new URL(TIMETABLE_LIST_URL);
-                DownloadFile(url, TempFile);
+                DownloadFile(new URL(TIMETABLE_LIST_URL), TempFile);
                 //File Successfully Downloaded to the provided Folder
                 //After download, we can start copy to the root to be read.
                 //Nothing to be passed here
@@ -66,12 +69,12 @@ public class NetworkActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            File NewFile = new File(ROOT_DIRECTORY_PATH, "TimeTableList.xml");
             //After creating file copy the content now.
-            CopyData(NewFile, TempFile);
+            CopyData(new File(ROOT_DIRECTORY_PATH, "TimeTableList.xml"), TempFile);
             //When Done Pass the file to be processed
             try {
-                DataParsing.ParseTimeTableList(new FileInputStream(NewFile));
+                //Parse Timetable List
+                DataParsing.ParseTimeTableList(new FileInputStream(new File(ROOT_DIRECTORY_PATH, "TimeTableList.xml")));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -81,19 +84,19 @@ public class NetworkActivity {
     public static class GetTimeTableInfo extends AsyncTask<String, Void, String> {
 
 
+
+
         @Override
         protected String doInBackground(String... strings) {
             StringBuilder fullString = new StringBuilder();
             try {
-                URL url = new URL(TIMETABLE_INFO_BASE + strings[0]);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
-                String str;
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new URL(TIMETABLE_INFO_BASE + strings[0]).openStream()));
+                String tempStr;
 
-                while ((str = bufferedReader.readLine()) != null) {
-                    fullString.append(str);
+                while ((tempStr = bufferedReader.readLine()) != null) {
+                    fullString.append(tempStr);
                 }
                 bufferedReader.close();
-                Log.i("LOG", "Timetable Info: " + fullString);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -106,23 +109,18 @@ public class NetworkActivity {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(appContext);
             if (s.equals("Time table for the current week is not available for this intake code.")) {
 
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("intakestatus", "FAILED");
+                SharedPreferences.Editor editor = sharedPreferences.edit().putString("intakestatus", "FAILED");
                 editor.apply();
+
+                //When error, don't downlaod the timetable, cause not exist, instead go to Main Activity and show error
                 Intent MainActivityIntent = new Intent(appContext, MainActivity.class);
                 appContext.startActivity(MainActivityIntent);
 
-                Log.i("TAG", "STATUS: " + "FAILED");
-
             } else {
-                Log.i("TAG", "STATUS: " + "FAILED");
-
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putString("intakestatus", "SUCCESS");
+                SharedPreferences.Editor editor = sharedPreferences.edit().putString("intakestatus", "SUCCESS");
                 editor.apply();
+
                 new GetTimeTableData().execute(s);
-
-
             }
         }
 
@@ -132,15 +130,14 @@ public class NetworkActivity {
 
         File TempFile = new File(ROOT_TEMP_PATH, "TimeTableTemporary.zip");
 
+
         @Override
         protected Void doInBackground(String... strings) {
             try {
-                URL url = new URL(strings[0]);
-                DownloadFile(url, TempFile);
+                DownloadFile(new URL(strings[0]), TempFile);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
-
             return null;
 
         }
@@ -148,24 +145,29 @@ public class NetworkActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+
+            //Unzip the Data
             new Decompress(TempFile.toString(), ROOT_TEMP_PATH + "/TimeTableTemporary/").unzip();
 
-            File NewFile = new File(ROOT_DIRECTORY_PATH, "TimeTable.xml");
-            CopyData(NewFile, new File(ROOT_TEMP_PATH + "/TimeTableTemporary/" + "timetable.xml"));
+            //Copy the Data to the root
+            CopyData(new File(ROOT_DIRECTORY_PATH, "TimeTable.xml"), new File(ROOT_TEMP_PATH + "/TimeTableTemporary/" + "timetable.xml"));
 
-            Utils.ListOfTimeTable.clear();
-            //Parse the data
+            //Parse the data{
             try {
-                DataParsing.ParseTimeTable(new FileInputStream(NewFile));
+                DataParsing.ParseTimeTable(new FileInputStream(new File(ROOT_DIRECTORY_PATH, "TimeTable.xml")));
+
+                Intent MainActivityIntent = new Intent(appContext, MainActivity.class);
+                appContext.startActivity(MainActivityIntent);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            Intent MainActivityIntent = new Intent(appContext, MainActivity.class);
-            appContext.startActivity(MainActivityIntent);
-
         }
     }
 
+/***********************************************************************************************************************************************************/
+/*
+Limit Here, Don't change anything below,
+*/
 
     private static void CreateFolder() {
         ROOT_DIRECTORY_PATH = Utils.getRootDirPath(appContext);
@@ -242,5 +244,10 @@ public class NetworkActivity {
             e.printStackTrace();
         }
         return httpURLConnection;
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        final ConnectivityManager connectivityManager = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
+        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
     }
 }

@@ -28,6 +28,9 @@ public class DataParsing {
 
     public static void ParseTimeTableList(FileInputStream xmlFileName) {
         try {
+            //Before storing clear it first
+            Utils.ListOfAllIntake.clear();
+
             XmlToJson xmlToJson = new XmlToJson.Builder(xmlFileName, null).build();
             JSONObject RootObject = new JSONObject(xmlToJson.toString());
             JSONObject WeekOfObject = RootObject.getJSONObject("weekof");
@@ -49,17 +52,18 @@ public class DataParsing {
 
     public static void ParseTimeTable(FileInputStream xmlFileName) {
         try {
+            Utils.ListOfTimeTable.clear();
+
             XmlToJson xmlToJson = new XmlToJson.Builder(xmlFileName, null).build();
             JSONObject RootObject = new JSONObject(xmlToJson.toString());
             JSONObject WeekObject = RootObject.getJSONObject("week");
             JSONArray DayArray = WeekObject.getJSONArray("day");
 
-
-
             for (int DayIndex = 0; DayIndex < DayArray.length(); DayIndex++) {
                 JSONObject DailyObject = DayArray.getJSONObject(DayIndex);
 
                 if (DailyObject.toString().substring(0, 10).equals("{\"class\":[")) {
+                    //More than one class for that day
                     JSONArray ClassArray = DailyObject.getJSONArray("class");
                     for (int DailyArrayIndex = 0; DailyArrayIndex < ClassArray.length(); DailyArrayIndex++) {
                         JSONObject SubjectObject = ClassArray.getJSONObject(DailyArrayIndex);
@@ -71,9 +75,8 @@ public class DataParsing {
 
                         Utils.ListOfTimeTable.add(new TimeTable(Date, StartTime, EndTime, Classroom, Module));
                     }
-                } else if (DailyObject.toString().substring(0, 10).equals("{\"class\":{")){
-
-                    //It is an object
+                } else if (DailyObject.toString().substring(0, 10).equals("{\"class\":{")) {
+                    //Only One Class for that day
                     JSONObject ClassObject = DailyObject.getJSONObject("class");
 
                     String Module = ClassObject.getString("subject");
@@ -87,10 +90,6 @@ public class DataParsing {
                     //No Class for that day
                     //Do Nothing, dont add.
                 }
-
-
-
-
             }
             Utils.MondayTimeTable.clear();
             Utils.TuesdayTimeTable.clear();
@@ -99,12 +98,11 @@ public class DataParsing {
             Utils.FridayTimeTable.clear();
 
             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            String tempDate = dateFormat.parse(Utils.ListOfTimeTable.get(0).getDate()).toString().substring(0, 4);
             for (int i = 0; i < Utils.ListOfTimeTable.size(); i++) {
 
                 if (dateFormat.parse(Utils.ListOfTimeTable.get(i).getDate()).toString().substring(0, 3).equals("Mon")) {
 
-                    Utils.MondayTimeTable.add((Utils.ListOfTimeTable.get(i)));
+                    Utils.MondayTimeTable.add((Utils.ListOfTimeTable.get(i )));
 
                 } else if (dateFormat.parse(Utils.ListOfTimeTable.get(i).getDate()).toString().substring(0, 3).equals("Tue")) {
 
@@ -124,9 +122,6 @@ public class DataParsing {
 
                 }
             }
-
-            //Check Friday
-
 
         } catch (JSONException e) {
             e.printStackTrace();

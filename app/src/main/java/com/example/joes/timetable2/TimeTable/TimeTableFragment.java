@@ -26,20 +26,12 @@ import java.util.List;
 
 public class TimeTableFragment extends Fragment {
     private static Context context;
-    private static int CURRENT_POSITION;
-    private static final String ARG_SECTION_NUMBER = "section_number";
-
-    public static RecyclerView TimeTableRecyclerView;
-    public RecyclerAdapter mAdapter;
-    public static TextView DateTextView;
+    private static String ARG_SECTION_NUMBER = "section_number";
 
     public List<TimeTable> dayOnly;
 
     public static void getContext(Context c) {
         context = c;
-    }
-    public static void getPosition(int position) {
-        CURRENT_POSITION = position;
     }
 
     @Nullable
@@ -47,12 +39,9 @@ public class TimeTableFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
-
         dayOnly = new ArrayList<>();
-        dayOnly.clear();
-        Bundle args = getArguments();
-        int SectionNumbers = args.getInt(ARG_SECTION_NUMBER);
 
+        int SectionNumbers = getArguments().getInt(ARG_SECTION_NUMBER);
 
         switch (SectionNumbers) {
             case 0:
@@ -71,41 +60,31 @@ public class TimeTableFragment extends Fragment {
                 dayOnly.addAll(Utils.FridayTimeTable);
                 break;
         }
-        View view = inflater.inflate(R.layout.fragment_timetable, null);
-        DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM");
-        Date date = null;
+        View view = inflater.inflate(R.layout.fragment_timetable, container, false);
+
         try {
 
-             if (dayOnly.isEmpty()) {
-
-             } else {
-                 date = df.parse(dayOnly.get(0).getDate());
-                 DateTextView = view.findViewById(R.id.dateTextView);
-                 DateTextView.setText(sdf.format(date));
-             }
+            if (!dayOnly.isEmpty()) {
+                TextView dateTextView = view.findViewById(R.id.dateTextView);
+                dateTextView.setText(new SimpleDateFormat("dd MMMM").format(new SimpleDateFormat("yyyy-MM-dd").parse(dayOnly.get(0).getDate())));
+            }
 
         } catch (ParseException e) {
             e.printStackTrace();
 
         }
 
-
-        TimeTableRecyclerView = view.findViewById(R.id.rv_timetable);
-        mAdapter = new RecyclerAdapter(dayOnly, context);
+        RecyclerView timeTableRecyclerView = view.findViewById(R.id.rv_timetable);
+        RecyclerAdapter mAdapter = new RecyclerAdapter(dayOnly, context);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
-        TimeTableRecyclerView.setLayoutManager(mLayoutManager);
-        TimeTableRecyclerView.setHasFixedSize(true);
-        TimeTableRecyclerView.setAdapter(mAdapter);
+
+        timeTableRecyclerView.setLayoutManager(mLayoutManager);
+        timeTableRecyclerView.setHasFixedSize(true);
+        timeTableRecyclerView.setAdapter(mAdapter);
         return view;
     }
 
-    public TimeTableFragment() {
-
-    }
-
     public static TimeTableFragment newInstance(int position) {
-
 
         TimeTableFragment blackFragment = new TimeTableFragment();
         Bundle args = new Bundle();

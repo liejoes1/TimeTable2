@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
@@ -31,9 +32,10 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //This is where the program starts
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        initVar();
+        init();
 
         //Provide Context
         NetworkActivity.setContext(this);
@@ -46,36 +48,21 @@ public class SplashScreenActivity extends AppCompatActivity {
             //Means that it is not yet defined, first startup
             DownloadEverything();
         } else {
-            //If already defined earlier, just parse the data, dont downlaod to save time
-
             try {
                 DataParsing.ParseTimeTableList(new FileInputStream(new File(NetworkActivity.ROOT_DIRECTORY_PATH, "TimeTableList.xml")));
                 DataParsing.ParseTimeTable(new FileInputStream(new File(NetworkActivity.ROOT_DIRECTORY_PATH, "TimeTable.xml")));
-
-                SplashScreenLinearLayout.setVisibility(View.VISIBLE);
-                new CountDownTimer(1000, 3000) {
-
-                    public void onTick(long millisUntilFinished) {
-                    }
-
-                    public void onFinish() {
-
-                        Intent MainActivityIntent = new Intent(context, MainActivity.class);
-                        context.startActivity(MainActivityIntent);
-                    }
-
-                }.start();
-
+                //When done parsing go to main activity now
+                Intent MainActivityIntent = new Intent(context, MainActivity.class);
+                context.startActivity(MainActivityIntent);
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
 
-
     }
 
-    private void initVar() {
+    private void init() {
         SplashScreenLinearLayout = findViewById(R.id.ll_splash_screen);
         IntakeScreenLinearLayout = findViewById(R.id.ll_intake_screen);
         LoadingScreenLinearLayout = findViewById(R.id.ll_loading_screen);
@@ -86,11 +73,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     private void DownloadEverything() {
         //This method will download all the files needed
-        //It only used for Initial Welcome Screen
-        //Or user force refresh ir
-
-        //Set Download Mode
-
+        //Only when user's first install app
 
         //Download Timetable List
         new NetworkActivity.GetTimeTableList().execute();
@@ -101,7 +84,6 @@ public class SplashScreenActivity extends AppCompatActivity {
         SplashScreenLinearLayout.setVisibility(View.GONE);
         IntakeScreenLinearLayout.setVisibility(View.VISIBLE);
 
-        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         TimeTableSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,9 +92,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                 for (int TotalIntake = 0; TotalIntake < Utils.ListOfAllIntake.size(); TotalIntake++) {
                     if (TimeTableListAutoCompleteTextView.getText().toString().toUpperCase().equals(Utils.ListOfAllIntake.get(TotalIntake))) {
                         INTAKE_NAME_CHECK = true;
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString(getString(R.string.pref_timetable_key), TimeTableListAutoCompleteTextView.getText().toString());
-                        editor.apply();
+                        PreferenceManager.getDefaultSharedPreferences(context).edit().putString(getString(R.string.pref_timetable_key), TimeTableListAutoCompleteTextView.getText().toString()).apply();
+
                         IntakeScreenLinearLayout.setVisibility(View.GONE);
                         LoadingScreenLinearLayout.setVisibility(View.VISIBLE);
                         new NetworkActivity.GetTimeTableInfo().execute(TimeTableListAutoCompleteTextView.getText().toString());

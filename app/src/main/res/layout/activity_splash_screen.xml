@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-
     tools:context="com.example.joes.timetable2.SplashScreenActivity">
 
     <LinearLayout
@@ -95,7 +94,6 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
 
     <LinearLayout
         android:id="@+id/ll_loading_screen"

@@ -2,6 +2,8 @@ package com.example.joes.timetable2;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -10,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +21,7 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.joes.timetable2.Settings.SettingsActivity;
 import com.example.joes.timetable2.TimeTable.FragmentPager;
@@ -34,17 +38,14 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
 
     public RecyclerAdapter mAdapter;
-    public static LinearLayout NoClassLinearLayout, LoadingScreenLinearLayout;
+    public static LinearLayout NoClassLinearLayout, LoadingScreenLinearLayout, NoInternetLinearLayout;
     public static RelativeLayout DisplayClassRelativeLayout;
 
     public static boolean INTAKE_CHANGED;
+    public static boolean NO_INTERNET = false;
 
     public static String INTAKE_STATUS;
 
-
-    public static void setIntakeStatus(String intakeStatus) {
-        INTAKE_STATUS = intakeStatus;
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,25 +55,28 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         //Provide Context
         TimeTableFragment.getContext(getApplicationContext());
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String value = sharedPreferences.getString("intakestatus", "");
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            String value = sharedPreferences.getString("intakestatus", "");
+            Log.i("TAH", "Status: " + value);
+            if (value.equals("SUCCESS")) {
+                LoadingScreenLinearLayout.setVisibility(View.GONE);
+                DisplayClassRelativeLayout.setVisibility(View.VISIBLE);
+                NoClassLinearLayout.setVisibility(View.GONE);
+            } else if (value.equals("FAILED")) {
+                LoadingScreenLinearLayout.setVisibility(View.GONE);
+                DisplayClassRelativeLayout.setVisibility(View.GONE);
+                NoClassLinearLayout.setVisibility(View.VISIBLE);
 
 
-        if (value.equals("SUCCESS")) {
-            DisplayClassRelativeLayout.setVisibility(View.VISIBLE);
-            NoClassLinearLayout.setVisibility(View.GONE);
-        }
-        else if (value.equals("FAILED")) {
-            DisplayClassRelativeLayout.setVisibility(View.GONE);
-            NoClassLinearLayout.setVisibility(View.VISIBLE);
-        }
 
+
+
+            }
 
         if (INTAKE_CHANGED) {
-            showSnackbar(getWindow().getDecorView().findViewById(android.R.id.content),"Intake changed successfully",Snackbar.LENGTH_LONG);
+            showSnackbar(getWindow().getDecorView().findViewById(android.R.id.content), "Intake changed successfully", Snackbar.LENGTH_LONG);
             INTAKE_CHANGED = false;
         }
-
         ViewPager viewPager = findViewById(R.id.viewpager);
         FragmentPager adapter = new FragmentPager(getSupportFragmentManager(), this);
         viewPager.setAdapter(adapter);
@@ -82,10 +86,11 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         tabLayout.setupWithViewPager(viewPager);
 
+
+
     }
 
-    public void showSnackbar(View view, String message, int duration)
-    {
+    public void showSnackbar(View view, String message, int duration) {
         // Create snackbar
         final Snackbar snackbar = Snackbar.make(view, message, duration);
 
@@ -103,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
     private void setupSharedPreference() {
+
         this.getSupportActionBar().hide();
         NoClassLinearLayout.setVisibility(View.GONE);
         DisplayClassRelativeLayout.setVisibility(View.GONE);
@@ -114,15 +120,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     }
 
 
-
     private void init() {
         NoClassLinearLayout = (LinearLayout) findViewById(R.id.ll_no_class);
         LoadingScreenLinearLayout = (LinearLayout) findViewById(R.id.ll_loading_screen);
         DisplayClassRelativeLayout = (RelativeLayout) findViewById(R.id.rl_display_data);
 
-
+        NoInternetLinearLayout = (LinearLayout) findViewById(R.id.ll_no_internet);
     }
-
 
 
     @Override
@@ -158,5 +162,28 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         super.onDestroy();
         // Unregister VisualizerActivity as an OnPreferenceChangedListener to avoid any memory leaks.
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    public static boolean doubleBackToExitPressedOnce = false;
+
+    @Override
+    public void onBackPressed() {
+
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            Intent exitAppIntent = new Intent(Intent.ACTION_MAIN);
+            exitAppIntent.addCategory(Intent.CATEGORY_HOME);
+            startActivity(exitAppIntent);
+            return;
+        }
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit.", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
     }
 }

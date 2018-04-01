@@ -22,7 +22,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.TimeTa
     private List<TimeTable> timetableList;
 
 
-    public RecyclerAdapter( List<TimeTable> timetableList, Context context) {
+    RecyclerAdapter(List<TimeTable> timetableList, Context context) {
         this.context = context;
         this.timetableList = timetableList;
     }
@@ -30,9 +30,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.TimeTa
     @NonNull
     @Override
     public TimeTableHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = LayoutInflater.from(context);
-        View view = layoutInflater.inflate(R.layout.timetable_list, parent, false);
-        return new TimeTableHolder(view);
+        return new TimeTableHolder(LayoutInflater.from(context).inflate(R.layout.timetable_list, parent, false));
     }
 
     @Override
@@ -43,7 +41,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.TimeTa
         holder.RoomTextView.setText(timetable.getLocation());
         String StartTime = timetable.getStartTime().substring(11,16);
         String EndTime = timetable.getEndTime().substring(11,16);
-        holder.time.setText(StartTime + " - " + EndTime);
+        holder.time.setText(String.format("%s - %s", StartTime, EndTime));
     }
 
     @Override
@@ -53,10 +51,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.TimeTa
 
     class TimeTableHolder extends RecyclerView.ViewHolder {
 
-        TextView TitleTextView, RoomTextView, LocationTextView, time;
+        TextView TitleTextView, RoomTextView, time;
 
 
-        public TimeTableHolder(View itemView) {
+        TimeTableHolder(View itemView) {
             super(itemView);
             TitleTextView = itemView.findViewById(R.id.course_title);
             RoomTextView = itemView.findViewById(R.id.course_room);
